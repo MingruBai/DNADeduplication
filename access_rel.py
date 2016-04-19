@@ -5,6 +5,9 @@ import os
 chr = sys.argv[1];
 #Target access point from user:
 target = int(sys.argv[2]);
+if target <= 0:
+	print "Invalid target coordinate.";
+	sys.exit();
 
 #Decompress:
 os.system("bzip2 -d -k ./var/chr"+chr+"_formatted.txt.bz2");
