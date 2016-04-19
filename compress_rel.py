@@ -51,11 +51,13 @@ cur_chr = '1';
 
 while(True):
     print cur_chr;
-    if cur_chr == '-1': break;
+    if index[p2] == -1: break;
     chr_type = [];
     chr_index = [];
     chr_seq = [];
     prev_index = 0;
+
+    print p0,p1,p2
 
     while chr[p0] == cur_chr and chr[p1] == cur_chr and chr[p2] == cur_chr:
 
@@ -175,4 +177,4 @@ while(True):
     cfile.write('\n');
     cfile.close();
 
-    cur_chr = chr[p2];
+    cur_chr = chr[p0];
