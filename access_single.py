@@ -23,10 +23,6 @@ def access_single(chr, target):
 	prevDiff = 0;
 	found = False;
 
-
-
-
-
 	for i in range(len(tList)):
 
 		t = tList[i];

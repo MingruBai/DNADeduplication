@@ -3,7 +3,6 @@ import os
 
 def access_range(chr, start, end):
 
-
 	numRead = end - start + 1;
 	readCount = 0;
 
