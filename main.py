@@ -18,6 +18,7 @@ if ':' in sys.argv[2]:
 		# for target in range(start, end+1):
 		# 	access_single(chr, target);
 		# print ""
+		
 	elif end == start:
 		access_single(chr, start);
 	else:
