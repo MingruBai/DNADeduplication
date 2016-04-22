@@ -111,23 +111,25 @@ def access_range(chr, start, end):
 	os.system("rm ./var/chr"+chr+"_formatted.txt");
 
 def get_ref(chr, loc):
-	#rfile = open("./chr/chr"+chr+".fa",'r')
-	filename = "./chr/chr"+chr+".fa";
+	rfile = open("./chr/chr"+chr+".fa",'r')
+	#filename = "./chr/chr"+chr+".fa";
 
-	lineNum = loc / 50 + 2;
-	linePos = loc % 50;
+	#lineNum = loc / 50 + 2;
+	#linePos = loc % 50;
 
-	# rfile.readline();
-	# n = loc / 50;
-	# p = loc % 50;
+	rfile.readline();
+	n = loc / 50;
+	p = loc % 50;
 
 	#WHY IT IS SLOW!!!!!
 	# for i in range(n):
 	# 	rfile.readline();
 
+	rfile.seek(n*51,1);
+
 	#print lineNum,linePos
 	#print linecache.getline(filename, lineNum)
 
-	# sys.stdout.write(rfile.readline().strip()[p]);
-	sys.stdout.write(linecache.getline(filename, lineNum).strip()[linePos]);
-	#rfile.close()
+	sys.stdout.write(rfile.readline().strip()[p]);
+	#sys.stdout.write(linecache.getline(filename, lineNum).strip()[linePos]);
+	rfile.close()
