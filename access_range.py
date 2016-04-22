@@ -1,5 +1,6 @@
 import sys
 import os
+import linecache
 
 def access_range(chr, start, end):
 
@@ -27,7 +28,8 @@ def access_range(chr, start, end):
 
 	for i in range(len(tList)):
 
-		#print target
+
+		#print '0'
 
 
 		t = tList[i];
@@ -36,7 +38,6 @@ def access_range(chr, start, end):
 
 		#Update the relative position
 		p = p + prevDiff;
-
 
 		#If access point is before next variation:
 		while target < p and readCount < numRead:
@@ -48,6 +49,8 @@ def access_range(chr, start, end):
 
 		if readCount >= numRead:
 			break;
+
+		# print '2'
 
 		#If SNP:
 		if t == '0':
@@ -95,6 +98,8 @@ def access_range(chr, start, end):
 		if readCount >= numRead:
 			break;
 
+	# print '3'
+
 	#If no more variation:
 	while readCount < numRead:
 		get_ref(chr, refLoc - 1);
@@ -106,11 +111,23 @@ def access_range(chr, start, end):
 	os.system("rm ./var/chr"+chr+"_formatted.txt");
 
 def get_ref(chr, loc):
-	rfile = open("./chr/chr"+chr+".fa",'r')
-	rfile.readline();
-	n = loc / 50;
-	p = loc % 50;
-	for i in range(n):
-		rfile.readline();
-	sys.stdout.write(rfile.readline().strip()[p]);
-	rfile.close()
+	#rfile = open("./chr/chr"+chr+".fa",'r')
+	filename = "./chr/chr"+chr+".fa";
+
+	lineNum = loc / 50 + 2;
+	linePos = loc % 50;
+
+	# rfile.readline();
+	# n = loc / 50;
+	# p = loc % 50;
+
+	#WHY IT IS SLOW!!!!!
+	# for i in range(n):
+	# 	rfile.readline();
+
+	#print lineNum,linePos
+	#print linecache.getline(filename, lineNum)
+
+	# sys.stdout.write(rfile.readline().strip()[p]);
+	sys.stdout.write(linecache.getline(filename, lineNum).strip()[linePos]);
+	#rfile.close()
