@@ -1,54 +1,206 @@
-chr = '1';
+import os
 
-vfile = open('./vector/vec' + chr +'.txt','w');
+ufile = open("JWB-unified-file.txt",'r');
+sfile = open("JWB-snp-file.txt",'r')
 
-ufile = open('JWB-unified-file.txt','r');
-dfile = open('./dbSNP/chr' + chr +'.txt','r');
+type = [];
+chr = [];
+index = [];
+seq = [];
 
-dfile.readline();
+p0 = 0;
+p1 = -1;
+p2 = -1;
 
-uline = ufile.readline();
-dline = dfile.readline();
+prevChr = "";
+prevIndex = -1;
+
+while(True):
+    sline = sfile.readline();
+    if len(sline) == 0: break;
+
+    slist = sline.strip().split(',');
+    t = slist[0];
+    c = slist[1][3:];
+    raw_i = int(slist[2]);
+
+    s = slist[3].split('/')[1];
+
+    type.append(t);
+    chr.append(c);
+    index.append(raw_i);
+    seq.append(s);
 
 
-while len(dline) != 0:
-
-    count = count + 1;
+while(True):
+    uline = ufile.readline();
+    if len(uline) == 0: break;
 
     ulist = uline.strip().split(',');
-    t_var = int(ulist[0]);
-    c_var = ulist[1][3:];
-    i_var = int(ulist[2]);
+    t = ulist[0];
+    c = ulist[1][3:];
+    raw_i = int(ulist[2]);
 
-    dlist = dline.strip().split();
-    i_db = int(dlist[3]);
+    if t == '1':
+        s = str(len(ulist[3].split('/')[0]));
+    if t == '2':
+        s = ulist[3].split('/')[1];
 
-    if t_var != 0 or c_var != chr:
-        dline = dfile.readline();
-        vfile.write('0');
+    #set pointer to start of each type:
+    if t == '1' and p1 == -1:
+        p1 = len(type);
+    if t == '2' and p2 == -1:
+        p2 = len(type);
+
+    if t == '0':
         continue;
 
-    if i_db > i_var:
-        uline = ufile.readline();
-        continue;
-
-    if i_db < i_var:
-        dline = dfile.readline();
-        vfile.write('0');
-        continue;
-
-    s_var = ulist[3];
-    s_db = dlist[9];
-
-    if (s_var[0] == s_db[0] and s_var[2] == s_db[2]) or (s_var[0] == s_db[2] and s_var[2] == s_db[0]):
-        vfile.write('1');
-    else:
-        vfile.write('0');
-
-    uline = ufile.readline();
-    dline = dfile.readline();
-
+    type.append(t);
+    chr.append(c);
+    index.append(raw_i);
+    seq.append(s);
 
 ufile.close();
-dfile.close();
-vfile.close();
+sfile.close();
+
+type.append('-1');
+chr.append('-1');
+index.append(-1);
+seq.append('-1');
+
+
+cur_chr = '1';
+
+os.system("mkdir ./var_dbsnp");
+
+while(True):
+    
+    if index[p2] == -1: break;
+    print cur_chr;
+    chr_type = [];
+    chr_index = [];
+    chr_seq = [];
+    prev_index = 0;
+
+    while chr[p0] == cur_chr and chr[p1] == cur_chr and chr[p2] == cur_chr:
+
+        if index[p0] <= index[p1] and index[p0] <= index[p2]:
+            chr_type.append(type[p0]);
+            chr_index.append(index[p0] - prev_index);
+            chr_seq.append(seq[p0]);
+
+            prev_index = index[p0];
+            p0 = p0 + 1;
+
+        if index[p1] <= index[p0] and index[p1] <= index[p2]:
+            chr_type.append(type[p1]);
+            chr_index.append(index[p1] - prev_index);
+            chr_seq.append(seq[p1]);
+
+            prev_index = index[p1];
+            p1 = p1 + 1;
+
+        if index[p2] <= index[p0] and index[p2] <= index[p1]:
+            chr_type.append(type[p2]);
+            chr_index.append(index[p2] - prev_index);
+            chr_seq.append(seq[p2]);
+
+            prev_index = index[p2];
+            p2 = p2 + 1;
+
+
+    while chr[p0] == cur_chr and chr[p1] == cur_chr:
+        if index[p0] <= index[p1]:
+            chr_type.append(type[p0]);
+            chr_index.append(index[p0] - prev_index);
+            chr_seq.append(seq[p0]);
+
+            prev_index = index[p0];
+            p0 = p0 + 1;
+
+        if index[p1] <= index[p0]:
+            chr_type.append(type[p1]);
+            chr_index.append(index[p1] - prev_index);
+            chr_seq.append(seq[p1]);
+
+            prev_index = index[p1];
+            p1 = p1 + 1;
+
+    while chr[p0] == cur_chr and chr[p2] == cur_chr:
+        if index[p0] <= index[p2]:
+            chr_type.append(type[p0]);
+            chr_index.append(index[p0] - prev_index);
+            chr_seq.append(seq[p0]);
+
+            prev_index = index[p0];
+            p0 = p0 + 1;
+
+        if index[p2] <= index[p0]:
+            chr_type.append(type[p2]);
+            chr_index.append(index[p2] - prev_index);
+            chr_seq.append(seq[p2]);
+
+            prev_index = index[p2];
+            p2 = p2 + 1;
+
+    while chr[p1] == cur_chr and chr[p2] == cur_chr:
+        if index[p1] <= index[p2]:
+            chr_type.append(type[p1]);
+            chr_index.append(index[p1] - prev_index);
+            chr_seq.append(seq[p1]);
+
+            prev_index = index[p1];
+            p1 = p1 + 1;
+
+        if index[p2] <= index[p1]:
+            chr_type.append(type[p2]);
+            chr_index.append(index[p2] - prev_index);
+            chr_seq.append(seq[p2]);
+
+            prev_index = index[p2];
+            p2 = p2 + 1;
+
+    while chr[p0] == cur_chr:
+        chr_type.append(type[p0]);
+        chr_index.append(index[p0] - prev_index);
+        chr_seq.append(seq[p0]);
+
+        prev_index = index[p0];
+        p0 = p0 + 1;
+
+    while chr[p1] == cur_chr:
+        chr_type.append(type[p1]);
+        chr_index.append(index[p1] - prev_index);
+        chr_seq.append(seq[p1]);
+
+        prev_index = index[p1];
+        p1 = p1 + 1;
+
+    while chr[p2] == cur_chr:
+        chr_type.append(type[p2]);
+        chr_index.append(index[p2] - prev_index);
+        chr_seq.append(seq[p2]);
+
+        prev_index = index[p2];
+        p2 = p2 + 1;
+
+    cfile = open("./var_dbsnp/chr" + cur_chr + "_formatted.txt",'w');
+    for t in chr_type:
+        cfile.write(t);
+    cfile.write('\n');
+
+    for i in chr_index:
+        cfile.write(str(i));
+        cfile.write(' ');
+    cfile.write('\n');
+
+    for s in chr_seq:
+        cfile.write(s);
+        cfile.write(' ');
+    cfile.write('\n');
+    cfile.close();
+
+    cur_chr = chr[p0];
+
+os.system("bzip2 ./var_dbsnp/*");
+
