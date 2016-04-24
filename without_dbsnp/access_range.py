@@ -102,7 +102,7 @@ def access_range(chr, start, end):
 	os.system("rm ./var/chr"+chr+"_formatted.txt");
 
 def get_ref(chr, loc):
-	rfile = open("./chr/chr"+chr+".fa",'r')
+	rfile = open("../chr/chr"+chr+".fa",'r')
 
 	rfile.readline();
 	n = loc / 50;

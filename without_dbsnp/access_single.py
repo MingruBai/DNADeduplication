@@ -85,7 +85,7 @@ def access_single(chr, target):
 # 	rfile.close()
 
 def get_ref(chr, loc):
-	rfile = open("./chr/chr"+chr+".fa",'r')
+	rfile = open("../chr/chr"+chr+".fa",'r')
 	#filename = "./chr/chr"+chr+".fa";
 
 	#lineNum = loc / 50 + 2;

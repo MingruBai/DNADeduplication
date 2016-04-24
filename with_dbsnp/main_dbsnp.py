@@ -74,7 +74,7 @@ def access_single(chr, target):
 	os.system("rm ./var_dbsnp/chr"+chr+"_formatted.txt");
 
 def get_ref_single(chr, loc):
-	rfile = open("./chr/chr"+chr+".fa",'r')
+	rfile = open("../chr/chr"+chr+".fa",'r')
 
 	rfile.readline();
 	n = loc / 50;
@@ -225,7 +225,7 @@ def access_range(chr, start, end):
 	os.system("rm ./var_dbsnp/chr"+chr+"_formatted.txt");
 
 def get_ref_range(chr, loc):
-	rfile = open("./chr/chr"+chr+".fa",'r')
+	rfile = open("../chr/chr"+chr+".fa",'r')
 
 	rfile.readline();
 	n = loc / 50;
@@ -263,7 +263,6 @@ def get_ref_range(chr, loc):
 		vline = vfile.readline();
 		vfile.close();
 		os.system("rm ./vector_dbsnp/vec" + chr + ".txt");
-
 
 		if vline[count] == '1':
 			ds = dline.split()[9];

@@ -1,6 +1,9 @@
+import os
+
 chr = '1';
-ufile = open('JWB-unified-file.txt','r');
+ufile = open('../JWB-unified-file.txt','r');
 newufile = open('JWB-snp-file.txt','w');
+os.system("mkdir ./vector_dbsnp");
 
 while True:
 
@@ -72,3 +75,5 @@ while True:
 
 ufile.close();
 newufile.close();
+os.system("bzip2 ./vector_dbsnp/*")
+

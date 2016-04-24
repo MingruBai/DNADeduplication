@@ -1,6 +1,7 @@
 import os
 
-ufile = open("JWB-unified-file.txt",'r');
+ufile = open("../JWB-unified-file.txt",'r');
+sfile = open("JWB-snp-file.txt",'r')
 
 type = [];
 chr = [];
@@ -15,6 +16,23 @@ prevChr = "";
 prevIndex = -1;
 
 while(True):
+    sline = sfile.readline();
+    if len(sline) == 0: break;
+
+    slist = sline.strip().split(',');
+    t = slist[0];
+    c = slist[1][3:];
+    raw_i = int(slist[2]);
+
+    s = slist[3].split('/')[1];
+
+    type.append(t);
+    chr.append(c);
+    index.append(raw_i);
+    seq.append(s);
+
+
+while(True):
     uline = ufile.readline();
     if len(uline) == 0: break;
 
@@ -23,8 +41,6 @@ while(True):
     c = ulist[1][3:];
     raw_i = int(ulist[2]);
 
-    if t == '0':
-        s = ulist[3].split('/')[1];
     if t == '1':
         s = str(len(ulist[3].split('/')[0]));
     if t == '2':
@@ -36,12 +52,16 @@ while(True):
     if t == '2' and p2 == -1:
         p2 = len(type);
 
+    if t == '0':
+        continue;
+
     type.append(t);
     chr.append(c);
     index.append(raw_i);
     seq.append(s);
 
 ufile.close();
+sfile.close();
 
 type.append('-1');
 chr.append('-1');
@@ -51,7 +71,7 @@ seq.append('-1');
 
 cur_chr = '1';
 
-os.system("mkdir ./var");
+os.system("mkdir ./var_dbsnp");
 
 while(True):
     
@@ -164,7 +184,7 @@ while(True):
         prev_index = index[p2];
         p2 = p2 + 1;
 
-    cfile = open("./var/chr" + cur_chr + "_formatted.txt",'w');
+    cfile = open("./var_dbsnp/chr" + cur_chr + "_formatted.txt",'w');
     for t in chr_type:
         cfile.write(t);
     cfile.write('\n');
@@ -182,5 +202,5 @@ while(True):
 
     cur_chr = chr[p0];
 
-os.system("bzip2 ./var/*");
+os.system("bzip2 ./var_dbsnp/*");
 

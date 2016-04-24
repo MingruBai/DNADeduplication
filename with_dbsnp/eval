@@ -1,0 +1,25 @@
+#!/bin/bash
+
+#single accesses:
+python ./main_dbsnp.py 1 885 >> eval_out
+python ./main_dbsnp.py 2 69740 >> eval_out
+python ./main_dbsnp.py 10 53571 >> eval_out
+python ./main_dbsnp.py M 195 >> eval_out
+python ./main_dbsnp.py X 425 >> eval_out
+python ./main_dbsnp.py X 454 >> eval_out
+python ./main_dbsnp.py X 579 >> eval_out
+python ./main_dbsnp.py 12 8542007 >> eval_out
+python ./main_dbsnp.py 20 1609998 >> eval_out
+python ./main_dbsnp.py 7 13579 >> eval_out
+
+#Range accesses:
+python ./main_dbsnp.py 1 1:1000 >> eval_out
+python ./main_dbsnp.py 2 10000:11000 >> eval_out
+python ./main_dbsnp.py 3 1:10000 >> eval_out
+python ./main_dbsnp.py M 50:60 >> eval_out
+python ./main_dbsnp.py X 1:500 >> eval_out
+python ./main_dbsnp.py 6 12:29 >> eval_out
+python ./main_dbsnp.py 9 1237800:1238000 >> eval_out
+python ./main_dbsnp.py 11 6000:16000 >> eval_out
+python ./main_dbsnp.py 19 160000:200000 >> eval_out
+python ./main_dbsnp.py 17 3500:35000 >> eval_out
