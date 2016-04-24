@@ -1,6 +1,5 @@
 import sys
 import os
-import linecache
 
 def access_range(chr, start, end):
 
@@ -10,10 +9,10 @@ def access_range(chr, start, end):
 	target = start;
 
 	#Decompress:
-	os.system("bzip2 -d -k ./var/chr"+chr+"_formatted.txt.bz2");
+	os.system("bzip2 -d -k ./var_dbsnp/chr"+chr+"_formatted.txt.bz2");
 
 	#Read variations:
-	cfile = open("./var/chr"+chr+"_formatted.txt",'r');
+	cfile = open("./var_dbsnp/chr"+chr+"_formatted.txt",'r');
 	tList = cfile.readline().strip();
 	pList = cfile.readline().strip().split();
 	sList = cfile.readline().strip().split();
@@ -99,7 +98,8 @@ def access_range(chr, start, end):
 
 	sys.stdout.write('\n');
 
-	os.system("rm ./var/chr"+chr+"_formatted.txt");
+	os.system("rm ./var_dbsnp/chr"+chr+"_formatted.txt");
+
 
 def get_ref(chr, loc):
 	rfile = open("./chr/chr"+chr+".fa",'r')
@@ -110,8 +110,61 @@ def get_ref(chr, loc):
 
 	rfile.seek(n*51,1);
 
-	sys.stdout.write(rfile.readline().strip()[p]);
+	base_ref = rfile.readline().strip()[p];
 	rfile.close()
+
+	count = 0;
+	dfile = open("./dbSNP/chr" + chr + ".txt",'r');
+	dfile.readline();
+	
+	while True:
+
+		dline = dfile.readline();
+		if len(dline) == 0: break;
+		di = int(dline.split()[3]);
+
+		if di > loc + 1: break;
+		if di < loc + 1:
+			count = count + 1;
+			continue;
+
+		count = count + 1;
+		os.system("bzip2 -d -k ./vector_dbsnp/vec" + chr + ".txt.bz2");
+		vfile = open("./vector_dbsnp/vec" + chr + ".txt");
+		vline = vfile.readline();
+		vfile.close();
+		os.system("rm ./vector_dbsnp/vec" + chr + ".txt");
+
+		if vline[count - 1] == '1':
+			ds = dline.split()[9];
+			if base_ref == ds[0]:
+				sys.stdout.write(ds[2]);
+				dfile.close();
+				return;
+			else:
+				sys.stdout.write(ds[0]);
+				dfile.close();
+				return;
+		else:
+			sys.stdout.write(base_ref);
+			dfile.close();
+			return;
+
+	sys.stdout.write(base_ref);
+	dfile.close();
+
+
+# def get_ref(chr, loc):
+# 	rfile = open("./chr/chr"+chr+".fa",'r')
+
+# 	rfile.readline();
+# 	n = loc / 50;
+# 	p = loc % 50;
+
+# 	rfile.seek(n*51,1);
+
+# 	sys.stdout.write(rfile.readline().strip()[p]);
+# 	rfile.close()
 
 
 # def get_ref(chr, loc):

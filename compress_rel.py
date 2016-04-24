@@ -1,3 +1,5 @@
+import os
+
 ufile = open("JWB-unified-file.txt",'r');
 
 type = [];
@@ -49,15 +51,16 @@ seq.append('-1');
 
 cur_chr = '1';
 
+os.system("mkdir ./var");
+
 while(True):
-    print cur_chr;
+    
     if index[p2] == -1: break;
+    print cur_chr;
     chr_type = [];
     chr_index = [];
     chr_seq = [];
     prev_index = 0;
-
-    print p0,p1,p2
 
     while chr[p0] == cur_chr and chr[p1] == cur_chr and chr[p2] == cur_chr:
 
@@ -161,7 +164,7 @@ while(True):
         prev_index = index[p2];
         p2 = p2 + 1;
 
-    cfile = open("chr" + cur_chr + "_formatted.txt",'w');
+    cfile = open("./var/chr" + cur_chr + "_formatted.txt",'w');
     for t in chr_type:
         cfile.write(t);
     cfile.write('\n');
@@ -178,3 +181,6 @@ while(True):
     cfile.close();
 
     cur_chr = chr[p0];
+
+os.system("bzip2 ./var/*");
+

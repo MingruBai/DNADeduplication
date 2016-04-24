@@ -159,7 +159,7 @@ while(True):
         prev_index = index[p2];
         p2 = p2 + 1;
 
-    cfile = open("chr" + cur_chr + "_formatted.txt",'w');
+    cfile = open("./var_abs/chr" + cur_chr + "_formatted.txt",'w');
     for t in chr_type:
         cfile.write(t);
     cfile.write('\n');
