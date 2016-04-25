@@ -66,8 +66,12 @@ int access_single(char chr, int target){
 	getline(varFile, pListString);
 	string sListString;
 	getline(varFile, sListString);
-	vector<string> pList = split(pListString, ' ');
-	vector<string> sList = split(sListString, ' ');
+    
+	//vector<string> pList = split(pListString, ' ');
+	//vector<string> sList = split(sListString, ' ');
+    
+    int pLoc = 0;
+    int sLoc = 0;
 
 	//Pointer at reference genome:
 	int refLoc = target;
@@ -79,8 +83,19 @@ int access_single(char chr, int target){
 	//Going through the variation to find the target:
 	for (int i = 0; i < tList.size(); i++){
 		char t = tList[i];
-		int p = stoi(pList[i]);
-		string s = sList[i];
+        
+        int pSpace = pListString.find(' ',pLoc + 1);
+        int p = stoi(pListString.substr(pLoc, pSpace - pLoc));
+        pLoc = pSpace + 1;
+        
+        int sSpace = sListString.find(' ',sLoc + 1);
+        string s = sListString.substr(sLoc, sSpace - sLoc);
+        sLoc = sSpace + 1;
+        
+        
+        
+		//int p = stoi(pList[i]);
+		//string s = sList[i];
 
 		//Update the relative position
 		p = p + prevDiff;
