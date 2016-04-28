@@ -1,0 +1,25 @@
+#!/bin/bash
+
+#single accesses:
+./main 1 885 > eval_out
+./main 2 69740 >> eval_out
+./main 10 53571 >> eval_out
+./main M 195 >> eval_out
+./main X 425 >> eval_out
+./main X 454 >> eval_out
+./main X 579 >> eval_out
+./main 12 8542007 >> eval_out
+./main 20 1609998 >> eval_out
+./main 7 13579 >> eval_out
+
+#Range accesses:
+./main 1 1:1000 >> eval_out
+./main 2 10000:11000 >> eval_out
+./main 3 1:10000 >> eval_out
+./main M 50:60 >> eval_out
+./main X 1:500 >> eval_out
+./main 6 12:29 >> eval_out
+./main 9 1237800:1238000 >> eval_out
+./main 11 6000:16000 >> eval_out
+./main 19 160000:200000 >> eval_out
+./main 17 3500:35000 >> eval_out

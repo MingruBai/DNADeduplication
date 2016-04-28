@@ -5,6 +5,8 @@
 #include <vector>
 
 using namespace std;
+int loc_db_global = -1;
+int count_global = 0;
 
 int get_ref_single(string chr, int loc){
 	string chrFilename = "../chr/chr";
@@ -112,7 +114,7 @@ int get_ref_single(string chr, int loc){
 	return 0;
 }
 
-int get_ref(string chr, int loc){
+int get_ref_range(string chr, int loc){
 	string chrFilename = "../chr/chr";
 	chrFilename.append(chr);
 	chrFilename.append(".fa");
@@ -126,10 +128,124 @@ int get_ref(string chr, int loc){
 	chrFile.seekg(n * 51, chrFile.cur);
 	getline(chrFile, chrLine);
 
-	cout << chrLine[p];
+	char base_ref = chrLine[p];
+    
 
+	string dfileName = "./dbSNP/chr";
+	dfileName.append(chr);
+	dfileName.append(".txt");
+	ifstream dFile(dfileName.c_str());
+	string dLine;
+	getline(dFile, dLine);
+
+	if (loc_db_global != -1){
+		dFile.seekg(loc_db_global, dFile.beg);
+	}
+
+
+	while (true){
+
+		getline(dFile, dLine);
+		loc_db_global = int(dFile.tellg()) - int(dLine.size()) - 1;
+		if (dLine.size() == 0) break;
+
+		int dLoc = 0;
+		int dSpace;
+
+		for (int i = 0; i < 4; i++){
+	        dSpace = dLine.find('\t',dLoc + 1);
+	        if (i == 3){
+	        	break;
+	        }
+	        dLoc = dSpace + 1;
+		}
+		//cout << dLine << endl;
+		//cout << dLine.substr(dLoc, dSpace - dLoc) << endl;
+
+		int di = stoi(dLine.substr(dLoc, dSpace - dLoc));
+
+
+		if (di > loc + 1){
+			break;
+		}
+		if (di < loc + 1){
+			count_global = count_global + 1;
+			continue;
+		}
+
+		//count_global = count_global + 1;
+
+		string unzipCommand = "bzip2 -d -k ./vector_dbsnp/vec";
+		unzipCommand.append(chr);
+		unzipCommand.append(".txt.bz2");
+		system(unzipCommand.c_str());
+
+		string vFilename = "./vector_dbsnp/vec";
+		vFilename.append(chr);
+		vFilename.append(".txt");
+		ifstream vFile(vFilename.c_str());
+		string vLine;
+		getline(vFile, vLine);
+
+		string deleteCommand = "rm ./vector_dbsnp/vec";
+		deleteCommand.append(chr);
+		deleteCommand.append(".txt");
+		system(deleteCommand.c_str());
+
+		if (vLine[count_global] == '1'){
+			dLoc = 0;
+			dSpace = 0;
+
+			for (int i = 0; i < 10; i++){
+		        dSpace = dLine.find('\t',dLoc + 1);
+		        if (i == 9){
+		        	break;
+		        }
+		        dLoc = dSpace + 1;
+			}
+
+			string ds = dLine.substr(dLoc, dSpace - dLoc);
+            
+//            if (ds[0] == '-'){
+//                cout << "*** " << endl;
+//                cout << ds << endl;;
+//            }
+
+			if (base_ref == ds[0]){
+				cout << ds[2];
+				return 0;
+			}else{
+				cout << ds[0];
+				return 0;
+			}
+		}else{
+			cout << base_ref;
+			return 0;
+		}
+	}
+
+	cout << base_ref;
 	return 0;
 }
+
+// int get_ref(string chr, int loc){
+// 	string chrFilename = "../chr/chr";
+// 	chrFilename.append(chr);
+// 	chrFilename.append(".fa");
+// 	ifstream chrFile(chrFilename.c_str());
+// 	string chrLine;
+// 	getline(chrFile, chrLine);
+
+// 	int n = loc / 50;
+// 	int p = loc % 50;
+
+// 	chrFile.seekg(n * 51, chrFile.cur);
+// 	getline(chrFile, chrLine);
+
+// 	cout << chrLine[p];
+
+// 	return 0;
+// }
 
 
 int access_single(string chr, int target){
@@ -306,7 +422,7 @@ int access_range(string chr, int start, int end){
 
 		//If access point is before next variation:
 		while (target < p && readCount < numRead){
-			get_ref(chr, refLoc - 1);
+			get_ref_range(chr, refLoc - 1);
 			readCount = readCount + 1;
 			found = true;
 			target = target + 1;
@@ -373,7 +489,7 @@ int access_range(string chr, int start, int end){
 
 	//If no more variation:
 	while (readCount < numRead){
-		get_ref(chr, refLoc - 1);
+		get_ref_range(chr, refLoc - 1);
 		refLoc = refLoc + 1;
 		readCount = readCount + 1;
 	}
@@ -388,6 +504,8 @@ int access_range(string chr, int start, int end){
 
 	return 0;
 }
+
+
 
 int main(int argc, char* argv[]){
 	string chr = argv[1];
